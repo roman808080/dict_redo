@@ -60,6 +60,9 @@ class TestDictRedo(unittest.TestCase):
         redo_map.undo()
         redo_map.set('c', 4)
 
+        # TODO: IndexError is probably is not a clear error in this case.
+        # Probably should throw a custom error.
+
         with self.assertRaises(IndexError):
             redo_map.redo()
 
@@ -70,6 +73,9 @@ class TestDictRedo(unittest.TestCase):
         redo_map.set('b', 7)
         redo_map.undo()
         redo_map.delete('b')
+
+        # TODO: IndexError is probably is not a clear error in this case.
+        # Probably should throw a custom error.
 
         with self.assertRaises(IndexError):
             redo_map.redo()
