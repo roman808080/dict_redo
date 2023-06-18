@@ -8,33 +8,39 @@ class RedoDictionary():
         self._stack_undo = []
 
     def set(self, key, value):
-        self._stack_undo.append(('add', key, value))
+        if key in self._dict:
+            self._stack_undo.append(('set', key, self._dict[key]))
+        else:
+            self._stack_undo.append(('delete', key))
+
         self._dict[key] = value
 
     def get(self, key):
         return self._dict[key]
 
     def delete(self, key):
-        removed_value = self._dict[key]
-        self._stack_undo.append(('remove', key, removed_value))
+        self._stack_undo.append((('set', key, self._dict[key])))
         del self._dict[key]
 
     def undo(self):
-        action, key, value = self._stack_undo.pop()
+        action, key, old_value = self._stack_undo.pop()
 
-        if action == 'add':
-            del self._dict[key]
+        if action == 'set':
+            # Saving the current value to the redo list before we reset it
+            self._stack_redo.append(('set', key, self._dict[key]))
+            self._dict[key] = old_value
+
         else:
-            self._dict[key] = value
-
-        self._stack_redo.append((action, key, value))
+            # Otherwise we need to delete and to add delete action to the redo list
+            self._stack_redo.append(('delete', key))
+            del self._dict[key]
 
     def redo(self):
-        action, key, value = self._stack_redo.pop()
+        action, key, old_value = self._stack_redo.pop()
 
-        if action == 'add':
-            self._dict[key] = value
+        if action == 'set':
+            self._stack_undo.append(('set', key, self._dict[key]))
+            self._dict[key] = old_value
         else:
+            self._stack_undo.append(('delete', key))
             del self._dict[key]
-
-        self._stack_undo.append((action, key, value))
