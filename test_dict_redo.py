@@ -2,31 +2,51 @@
 import unittest
 from dict_redo import RedoDictionary
 
+
 class TestDictRedo(unittest.TestCase):
-    def test_one_test_to_rule_them_all(self):
-        # TODO: Split the test
 
-        our_dict = RedoDictionary()
+    def test_getting_element(self):
+        redo_map = RedoDictionary()
+        redo_map.add('a', 3)
+        self.assertEqual(redo_map.get('a'), 3)
 
-        our_dict.add('a', 3)
-        assert our_dict.get('a') == 3
+    def test_removal(self):
+        redo_map = RedoDictionary()
+        redo_map.add('a', 3)
+        self.assertEqual(redo_map.get('a'), 3)
 
-        our_dict.remove('a')
-        # assert our_dict.get('a') == 3
+        redo_map.remove('a')
+        with self.assertRaises(KeyError):
+            redo_map.get('a')
 
-        our_dict.undo()
-        assert our_dict.get('a') == 3
+    def test_undo(self):
+        redo_map = RedoDictionary()
 
-        our_dict.redo()
-        # assert our_dict.get('a') == 3
+        redo_map.add('a', 3)
+        redo_map.remove('a')
+        redo_map.undo()
 
-        our_dict.undo()
-        assert our_dict.get('a') == 3
+        self.assertEqual(redo_map.get('a'), 3)
 
-        our_dict.add('b', 3)
-        our_dict.add('b', 5)
-        our_dict.undo()
-        assert our_dict.get('b') == 3
+    def test_redo(self):
+        redo_map = RedoDictionary()
+
+        redo_map.add('a', 3)
+        redo_map.remove('a')
+        redo_map.undo()
+        redo_map.redo()
+
+        with self.assertRaises(KeyError):
+            redo_map.get('a')
+
+    def test_set_with_the_same_key(self):
+        redo_map = RedoDictionary()
+
+        redo_map.add('b', 3)
+        redo_map.add('b', 5)
+
+        redo_map.undo()
+        self.assertEqual(redo_map.get('b'), 3)
 
 
 if __name__ == '__main__':
