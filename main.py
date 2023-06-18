@@ -6,10 +6,7 @@ class RedoDictionary():
         self._stack_undo = []
         
     def add(self, key, value):
-        if key in self._stack_undo:
-            self._stack_undo.append(('add', key, None, None))
-
-        self._stack_undo.append(('add', key, value, None))
+        self._stack_undo.append(('add', key, value))
         self._dict[key] = value
         
     def get(self, key):
