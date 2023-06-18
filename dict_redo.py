@@ -7,14 +7,14 @@ class RedoDictionary():
         self._stack_redo = []
         self._stack_undo = []
 
-    def add(self, key, value):
+    def set(self, key, value):
         self._stack_undo.append(('add', key, value))
         self._dict[key] = value
 
     def get(self, key):
         return self._dict[key]
 
-    def remove(self, key):
+    def delete(self, key):
         removed_value = self._dict[key]
         self._stack_undo.append(('remove', key, removed_value))
         del self._dict[key]
