@@ -15,12 +15,18 @@ class RedoDictionary():
 
         self._dict[key] = value
 
+        # We need to clear the redo stack, otherwise it is not clear what we need to restore from the redo
+        self._stack_redo.clear()
+
     def get(self, key):
         return self._dict[key]
 
     def delete(self, key):
         self._stack_undo.append((('set', key, self._dict[key])))
         del self._dict[key]
+
+        # We need to clear the redo stack, otherwise it is not clear what we need to restore from the redo
+        self._stack_redo.clear()
 
     def undo(self):
         self._reverse_action(self._stack_undo, self._stack_redo)
