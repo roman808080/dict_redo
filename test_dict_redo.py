@@ -16,6 +16,9 @@ class TestDictRedo(unittest.TestCase):
         self.assertEqual(redo_map.get('a'), 3)
 
         redo_map.delete('a')
+
+        # I do not to intercept KeyError excetptions of the underlying dict object.
+        # An exception is expected in this case, and the default error should be sufficient in this case
         with self.assertRaises(KeyError):
             redo_map.get('a')
 
@@ -36,6 +39,8 @@ class TestDictRedo(unittest.TestCase):
         redo_map.undo()
         redo_map.redo()
 
+        # I do not to intercept KeyError excetptions of the underlying dict object
+        # An exception is expected in this case, and the default error should be sufficient in this case
         with self.assertRaises(KeyError):
             redo_map.get('a')
 
@@ -47,6 +52,12 @@ class TestDictRedo(unittest.TestCase):
 
         redo_map.undo()
         self.assertEqual(redo_map.get('b'), 3)
+
+    def test_redo_after_set(self):
+        pass
+
+    def test_redo_after_delete(self):
+        pass
 
 
 if __name__ == '__main__':
