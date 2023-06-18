@@ -54,10 +54,25 @@ class TestDictRedo(unittest.TestCase):
         self.assertEqual(redo_map.get('b'), 3)
 
     def test_redo_after_set(self):
-        pass
+        redo_map = RedoDictionary()
+
+        redo_map.set('b', 3)
+        redo_map.undo()
+        redo_map.set('c', 4)
+
+        with self.assertRaises(IndexError):
+            redo_map.redo()
 
     def test_redo_after_delete(self):
-        pass
+        redo_map = RedoDictionary()
+
+        redo_map.set('b', 3)
+        redo_map.set('b', 7)
+        redo_map.undo()
+        redo_map.delete('b')
+
+        with self.assertRaises(IndexError):
+            redo_map.redo()
 
 
 if __name__ == '__main__':
